@@ -1,42 +1,79 @@
 import React, { Component } from 'react';
+import { MdClose } from "react-icons/md";
+import Select from 'react-select';
 
 class Field extends Component {
 	state = {
-		fieldValue: 'text',
-		operationValue: 'containing',
 		operations: {
-			text: ['Containing', 'Exactly Matching', 'Begins With', 'Ends with'],
-			number: ['Equal', 'Greater Than', 'Less Than']
+			text: ['Containing', 'Exactly matching', 'Begins with', 'Ends with'],
+			number: ['Equal', 'Greater than', 'Less than']
 		}
 	}
 
-	handleFieldChange = event => {
-		this.setState({fieldValue: event.target.value})
+	handleFieldTypeChange = event => {
+		const { value, id } = this.props.field
+
+		this.props.onFieldChange({
+			id,
+			value: event.target.value,
+			operation: value === 'text' ? 'Equal' : 'Containing',
+			input: ''
+		})
 	}
 
 	handleOperationChange = event => {
-		console.log()
-		this.setState({operationValue: event.target.value})
+		const { id, value, input } = this.props.field
+
+		this.props.onFieldChange({
+			operation: event.target.value,
+			id,
+			value,
+			input
+		})
+	}
+
+	handleInputChange = event => {
+		event.preventDefault()
+
+		const { id, value, operation } = this.props.field
+
+		this.props.onFieldChange({
+			id, 
+			value,
+			operation,
+			input: event.target.value
+		})
+	}
+
+	handleDelete = () => {
+		const { id } = this.props.field
+
+		this.props.onDelete(id)
 	}
 
   	render() {
-  		const { fieldValue, operationValue, operations } = this.state
-  		const options = fieldValue === 'text' ? [...operations.text] : [...operations.number]
+  		const { operations } = this.state
+  		const { field: { value, operation, input }, deletable} = this.props
+  		const options = value === 'text' ? [...operations.text] : [...operations.number]
 
 	    return (
-	    	<div>
-	        	<select value={fieldValue} name="fields" onChange={this.handleFieldChange} >
+	    	<div className='field'>
+	        	<select value={value} name="fields" onChange={this.handleFieldTypeChange} >
 				    <option value="text">Text Field</option>
 				    <option value="number">Number Field</option>
 				</select>
-				<select value={operationValue} name="operations" onChange={this.handleOperationChange} >
+				<select value={operation} name="operations" onChange={this.handleOperationChange} >
 				    {
 				    	options.map( option => 
 				    		<option value={option} key={option} >{option}</option>
 				    	)
 				    }
 				</select>
-				<input type={fieldValue} />
+				<input value={input} type={value} onChange={this.handleInputChange} />
+				{
+					deletable && 
+						<span onClick={this.handleDelete}><MdClose /></span>
+				}
 			</div>
 	    );
   	}
