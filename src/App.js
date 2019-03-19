@@ -13,8 +13,8 @@ class App extends Component {
 	}
 
 	handleFieldChange = field => {
-		const { id } = field
-		const { fields } = this.state
+		const { id } = field;
+		const { fields } = this.state;
 
 		const i = fields.findIndex(field => field.id === id);
 
@@ -24,30 +24,28 @@ class App extends Component {
 					field,
 					...fields.slice(i + 1)
 				]
-		})
+		});
 	}
 
 	addField = e => {
-		e.preventDefault()
+		const { fields } = this.state;
 
-		const { fields } = this.state
-
-		const id = +fields[fields.length - 1].id.split('-')[1] + 1
+		const id = +fields[fields.length - 1].id.split('-')[1] + 1;
 
 		const newField = {
 			id: `field-${id}`,
 			value: 'text',
 			operation: 'Containing',
 			input: ''
-		}
+		};
 
 		this.setState({
 			fields: [...fields, newField]
-		})
+		});
 	}
 
 	deleteField = id => {
-		const { fields } = this.state
+		const { fields } = this.state;
 
 		const i = fields.findIndex(field => field.id === id);
 
@@ -56,18 +54,16 @@ class App extends Component {
 					...fields.slice(0, i),
 					...fields.slice(i + 1)
 				]
-		})
+		});
 	}
 
 	applyFilter = e => {
-		e.preventDefault()
-
-		const { fields } = this.state
+		const { fields } = this.state;
 
 		const output = {
 			text: [],
 			number: []
-		} 
+		};
 
 		fields.map( ({ value, operation, input }) => {
 			if (value === 'text') {
@@ -81,30 +77,28 @@ class App extends Component {
 					value: +input
 				})
 			}
-		})
+		});
 
-		console.log(output)
+		console.log(output);
 
-		this.clearFilter(e)
+		this.clearFilter(e);
 	}
 
 	clearFilter = e => {
-		e.preventDefault()
-
 		this.setState({ fields: [{
 			id: 'field-1',
 			value: 'text',
 			operation: 'Containing',
 			input: ''
-		}]})
+		}]});
 	}
 
   	render() {
-  		const { fields } = this.state
-  		const deletable = fields.length > 1 
+  		const { fields } = this.state;
+  		const deletable = fields.length > 1;
 
 	    return (
-	        <form className='field-container'>
+	        <form className='field-container' onSubmit={e => {e.preventDefault()}}>
 	        	{
 	        		fields.map( field => 
 	        			<Field 
@@ -118,11 +112,11 @@ class App extends Component {
 	        	}
 	        	{ 
 	        		fields.length !== 10 && 
-	        			<div onClick={this.addField} ><MdAdd /> Add condition</div>
+	        			<div className='btn btn-add' onClick={this.addField} ><MdAdd /> Add condition</div>
 	        	}
 	        	<hr />
-	        	<button onClick={this.applyFilter} >Apply</button>
-	        	<button onClick={this.clearFilter} >Clear filter</button>
+	        	<div className='btn btn-apply' onClick={this.applyFilter} >Apply</div>
+	        	<div className='btn btn-clear' onClick={this.clearFilter} >Clear filter</div>
 	        </form>
 	    );
   	}
