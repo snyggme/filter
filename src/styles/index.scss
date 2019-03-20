@@ -8,8 +8,8 @@ body {
 }
 
 .field-container {
-	max-width: 660px;
-	margin: 100px auto;
+	max-width: 670px;
+	margin: 50px auto;
 
 	.field {
 		display: grid;
@@ -22,6 +22,7 @@ body {
 			padding: 5px 15px;
 			border: 1px solid grey;
 			border-radius: 4px;
+			transition: all 200ms;
 
 			&:focus {
 				outline: none;
@@ -32,12 +33,15 @@ body {
 
 		.close {
 			font-size: 1.5em;
+			color: grey;
 			display: grid;
 			align-items: center;
 			justify-items: center;
 			cursor: pointer;
+			transition: all 200ms;
 
 			&:hover {
+				transform: scale(1.2);
 				color: red;
 			}
 		}
@@ -47,11 +51,13 @@ body {
 		height: 36px;
 		margin-top: 20px;
 		margin-right: 10px;
+		margin-bottom: 50px;
 		border-radius: 3px;
 		display: grid;
 		align-items: center;
 		justify-items: center;
 		cursor: pointer;
+		transition: all 200ms;
 	}
 
 	.btn-add {

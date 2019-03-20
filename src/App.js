@@ -4,6 +4,7 @@ import { MdAdd } from "react-icons/md";
 
 class App extends Component {
 	state = {
+		print: '',
 		fields: [{
 			id: 'field-1',
 			value: 'text',
@@ -80,21 +81,47 @@ class App extends Component {
 		});
 
 		console.log(output);
-
-		this.clearFilter(e);
+		
+		this.print(output);
 	}
 
 	clearFilter = e => {
 		this.setState({ fields: [{
-			id: 'field-1',
-			value: 'text',
-			operation: 'Containing',
-			input: ''
-		}]});
+				id: 'field-1',
+				value: 'text',
+				operation: 'Containing',
+				input: ''
+			}],
+			print: ''
+		});
+	}
+
+	print = output => {
+		let toprint = '{\n';
+
+		for (let prop in output) {
+			toprint += `    ${prop}: [`;
+
+			output[prop].map( ({ operation, value }) => {
+				if (typeof value === 'string')
+					value = `'${value}'`;
+
+				toprint += `\n        { operation: '${operation}', value: ${value} },`
+			});
+
+			if (output[prop].length === 0)
+				toprint += '], \n';
+			else 
+				toprint += '\n    ], \n';
+		}
+
+		toprint += '}';
+
+		this.setState({print: toprint});
 	}
 
   	render() {
-  		const { fields } = this.state;
+  		const { fields, print } = this.state;
   		const deletable = fields.length > 1;
 
 	    return (
@@ -117,6 +144,7 @@ class App extends Component {
 	        	<hr />
 	        	<div className='btn btn-apply' onClick={this.applyFilter} >Apply</div>
 	        	<div className='btn btn-clear' onClick={this.clearFilter} >Clear filter</div>
+	        	<pre>{print}</pre>
 	        </form>
 	    );
   	}
